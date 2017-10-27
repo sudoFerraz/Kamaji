@@ -76,6 +76,7 @@ class Indicator(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     date = Column(DateTime, server_default=func.now())
+    value = Column(Float)
 
 class Strategy(Base):
     __tablename__ = "Strategy"
