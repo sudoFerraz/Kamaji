@@ -63,7 +63,7 @@ class Invoice(Base):
     name = Column(String)
 
 
-class Pay_Action(Base):
+class Action(Base):
 
     __tablename__ = "Action"
     id = Column(Integer, primary_key=True)

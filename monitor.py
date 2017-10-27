@@ -1,5 +1,5 @@
-#import model.py
-#import dbmodel.py
+import model
+import auxiliary
 import time
 import numpy as np
 import plotly as py
@@ -13,7 +13,10 @@ import pandas as pd
 from stockstats import StockDataFrame
 import datetime as dt
 import matplotlib.pyplot as plt
+from pyfiglet import Figlet
 
+f = Figlet(font='epic')
+print f.renderText('Kamaji')
 
 
 
@@ -24,6 +27,22 @@ import matplotlib.pyplot as plt
 #dat = data.DataReader('USDBRL=X', 'yahoo')
 #dat.to_csv('brlusd.csv', mode='w', header=True)
 #stock = StockDataFrame.retype(pd.read_csv('usdbrl.csv')
+os_tools = auxiliary.ostools()
+session = os_tools.db_connection()
+user_handler = auxiliary.user_handler()
+data_handler = auxiliary.data_handler()
+signal_handler = auxiliary.signal_handler()
+notification_handler = auxiliary.notification_handler()
+invoice_handler = auxiliary.invoice_handler()
+action_handler = auxiliary.action_handler()
+graph_storage = auxiliary.graph_storage()
+indicator_handler = auxiliary.indicator_handler()
+
+
+
+
+
+
 
 while True:
     start_date = dt.datetime(1995, 1, 1)
@@ -40,26 +59,96 @@ while True:
     macd_histogram = data['macdh']
     open_delta_against_next2day = data['open_2_d']
     change_2days_ago = data['open_-2_r']
+
+
+    bollinger_up_indicator = indicator_handler.get_indicator_by_name(session, 'bollinger_up')
+    bollinger_low_indicator = indicator_handler.get_indicator_by_name(session, 'bollinger_low')
+    close_price_indicator = indicator_handler.get_indicator_by_name(session, 'close_price')
+    rsi6_indicator = indicator_handler.get_indicator_by_name(session, 'rsi6')
+    rsi_12_indicator = indicator_handler.get_indicator_by_name(session, 'rsi12')
+    macd_indicator = indicator_handler.get_indicator_by_name(session, 'macd')
+    macd_histogram_indicator = indicator_handler.get_indicator_by_name(session, 'macd_histogram')
+    macd_signal_line_indicator = indicator_handler.get_indicator_by_name(session, 'macd_signal_line')
+    change_2days_ago_indicator = indicator_handler.get_indicator_by_name(session, 'change_2days_ago')
+
     last_bollinger_up = up_bollinger[-1]
+    try:
+        bollinger_up_indicator
+        indicator_handler.update_indicator(session, bollinger_up_indicator.id, last_bollinger_up)
+    except:
+        bollinger_up_indicator = indicator_handler.create_indicator(session, 'bollinger_up', last_bollinger_up)
+
+
+
     last_bollinger_low = low_bollinger[-1]
+    try:
+        bollinger_low_indicator
+        indicator_handler.update_indicator(session, bollinger_low_indicator.id, last_bollinger_low)
+    except:
+        bollinger_low_indicator = indicator_handler.create_indicator(session, 'bollinger_low', last_bollinger_low)
+
+
+
     last_close_price = close_price[-1]
+    try:
+        close_price_indicator
+        indicator_handler.update_indicator(session, close_price_indicator.id, last_close_price)
+    except:
+        close_price_indicator = indicator_handler.create_indicator(session, 'close_price', last_close_price)
+
+
+
     last_rsi_6 = rsi_price_6[-1]
+    try:
+        rsi6_indicator
+        indicator_handler.update_indicator(session, rsi6_indicator.id, last_rsi_6)
+    except:
+        rsi6_indicator = indicator_handler.create_indicator(session, 'rsi6', last_rsi_6)
+
+
+
     last_rsi_12 = rsi_price_12[-1]
+    try:
+        rsi_12_indicator
+        indicator_handler.update_indicator(session, rsi_12_indicator.id, last_rsi_12)
+    except:
+        rsi12_indicator = indicator_handler.create_indicator(session, 'rsi12', last_rsi_12)
+
+
+
     last_macd_signal_line = macd_signal_line[-1]
-    last_macd = macd[-1]
+    try:
+        macd_signal_line_indicator
+        indicator_handler.update_indicator(session, macd_signal_line_indicator.id, last_macd_signal_line)
+    except:
+        macd_signal_line_indicator = indicator_handler.create_indicator(session, 'macd_signal_line', last_macd_signal_line)
+
     last_macd_histogram = macd_histogram[-1]
-    last_open_delta_against_next2day = open_delta_against_next2day[-1]
+    try:
+        macd_histogram_indicator
+        indicator_handler.update_indicator(session, macd_histogram_indicator.id, last_macd_histogram)
+    except:
+        macd_histogram_indicator = indicator_handler.create_indicator(session, 'macd_histogram', last_macd_histogram)
+
+
+
     last_change_2days_ago = change_2days_ago[-1]
+    try:
+        change_2days_ago_indicator
+        indicator_handler.update_indicator(session, change_2days_ago_indicator.id, last_change_2days_ago)
+    except:
+        change_2days_ago_indicator = indicator_handler.create_indicator(session, 'change_2days_ago', last_change_2days_ago)
+
     print '[+] Ultimo Close', str(last_close_price)
     print '[+] Ultimo Teto Bollinger Band', str(last_bollinger_up)
     print '[+] Ultimo Chao Bollinger Band', last_bollinger_low
     print '[+] Ultimo RSI 6 dias', str(last_rsi_6)
     print '[+] Ultimo RSI 12 dias', str(last_rsi_12)
-    print '[+] Ultimo Macd', str(last_macd)
+#    print '[+] Ultimo Macd', str(last_macd)
     print '[+] Ultimo Macd Signal line', str(last_macd_signal_line)
     print '[+] Ultimo Macd Histogram', str(last_macd_histogram)
-    print '[+] Ultimo Open Delta Proximos 2 dias', str(last_open_delta_against_next2day)
-    print '[+] Ultima Porcentagem de mudanca 2 dias atras', str(last_change_2days_ago)
+
+    print '[+] Ultima Porcentagem de mudanca 2 dias atras  %0.3f' % last_change_2days_ago
     #print data['macdh']
     #print data['boll_ub']
     #print data

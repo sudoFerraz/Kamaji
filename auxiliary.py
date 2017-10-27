@@ -6,12 +6,10 @@ import hashlib
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.scoping import scoped_session
-from sqlalchemy import inspect
 
 
-from model import User, Raw_data, Signal, Notification, Action
+from model import User, Raw_data, Signal, Notification, Action, Indicator
 import model
-from sqlalchemy import inspec
 
 class ostools(object):
     def __initi__(self):
@@ -242,14 +240,14 @@ class graph_storage(object):
 
     def update_csv(self, session, updated_csv, to_be_updated_id):
     #Updating with no new name
-    to_be_updated_csv = session.query(CSV).filter_by(id=to_be_updated_id).first()
-    if to_be_updated_csv.id == to_be_updated_id:
-        to_be_updated_.csv_file = updated_csv
-        session.commit()
-        session.flush
-        return to_be_updated_csv
-    else:
-        return False
+        to_be_updated_csv = session.query(CSV).filter_by(id=to_be_updated_id).first()
+        if to_be_updated_csv.id == to_be_updated_id:
+            to_be_updated_.csv_file = updated_csv
+            session.commit()
+            session.flush
+            return to_be_updated_csv
+        else:
+            return False
 
     def delete_csv(self, session, to_be_deleted):
         found_csv = session.query(CSV).filter_by(id=to_be_deleted.id).delete()
@@ -276,14 +274,14 @@ class graph_storage(object):
 
 
 class indicator_handler(object):
-    def create_indicator(self, session, indicator_name, indicator_date):
-        new_indicator = model.Indicator(name=indicator_name, date=indicator_date)
+    def create_indicator(self, session, indicator_name, indicator_value):
+        new_indicator = model.Indicator(name=indicator_name, value=indicator_value)
         session.add(new_indicator)
         session.commit()
         session.flush()
         return new_indicator
 
-    def get_indicator(self, sesison, indicator_id):
+    def get_indicator(self, session, indicator_id):
         found_indicator = session.query(Indicator).filter_by(id=indicator_id).first()
         if not found_indicator:
             return False
@@ -306,4 +304,12 @@ class indicator_handler(object):
         else:
             return False
 
-
+    def update_indicator(self, session, indicator_id, new_value):
+        found_indicator = session.query(Indicator).filter_by(id=indicator_id).first()
+        if not found_indicator:
+            return False
+        if found_indicator:
+            found_indicator.value = new_value
+            session.commit()
+            session.flush()
+            return found_indicator
