@@ -14,6 +14,8 @@ from stockstats import StockDataFrame
 import datetime as dt
 import matplotlib.pyplot as plt
 from pyfiglet import Figlet
+from prettytable import PrettyTable
+table = PrettyTable()
 
 f = Figlet(font='epic')
 print f.renderText('Kamaji')
@@ -59,7 +61,16 @@ while True:
     macd_histogram = data['macdh']
     open_delta_against_next2day = data['open_2_d']
     change_2days_ago = data['open_-2_r']
+    close_20_sma = data['close_20_sma']
+    close_20_mstd = data['close_20_mstd']
+    boll = data['boll']
+    close_12_ema = data['close_12_ema']
+    close_26_ema = data['close_26_ema']
+    last_close_price = close_price[-1]
 
+
+
+    data.to_csv('brl_usd_indicators.csv', mode='w', header=True)
 
     bollinger_up_indicator = indicator_handler.get_indicator_by_name(session, 'bollinger_up')
     bollinger_low_indicator = indicator_handler.get_indicator_by_name(session, 'bollinger_low')
@@ -70,6 +81,12 @@ while True:
     macd_histogram_indicator = indicator_handler.get_indicator_by_name(session, 'macd_histogram')
     macd_signal_line_indicator = indicator_handler.get_indicator_by_name(session, 'macd_signal_line')
     change_2days_ago_indicator = indicator_handler.get_indicator_by_name(session, 'change_2days_ago')
+    bollinger_up_signal = False
+    bollinger_low_signal = False
+    rsi_signal = False
+    macd_signal_line_signl = False
+    macd_histogram_signal = False
+
 
     last_bollinger_up = up_bollinger[-1]
     try:
@@ -77,7 +94,9 @@ while True:
         indicator_handler.update_indicator(session, bollinger_up_indicator.id, last_bollinger_up)
     except:
         bollinger_up_indicator = indicator_handler.create_indicator(session, 'bollinger_up', last_bollinger_up)
-
+    if last_bollinger_up < last_close_price:
+        bollinger_up_signal = True
+    table.add_column("Bollinger up indicator", [str(bollinger_up_signal)])
 
 
     last_bollinger_low = low_bollinger[-1]
@@ -86,8 +105,9 @@ while True:
         indicator_handler.update_indicator(session, bollinger_low_indicator.id, last_bollinger_low)
     except:
         bollinger_low_indicator = indicator_handler.create_indicator(session, 'bollinger_low', last_bollinger_low)
-
-
+    if last_bollinger_low > last_close_price:
+        bollinger_low_signal = True
+    table.add_column("Bollinger low indicator", [str(bollinger_low_signal)])
 
     last_close_price = close_price[-1]
     try:
@@ -95,8 +115,6 @@ while True:
         indicator_handler.update_indicator(session, close_price_indicator.id, last_close_price)
     except:
         close_price_indicator = indicator_handler.create_indicator(session, 'close_price', last_close_price)
-
-
 
     last_rsi_6 = rsi_price_6[-1]
     try:
@@ -113,8 +131,9 @@ while True:
         indicator_handler.update_indicator(session, rsi_12_indicator.id, last_rsi_12)
     except:
         rsi12_indicator = indicator_handler.create_indicator(session, 'rsi12', last_rsi_12)
-
-
+    if last_rsi_6 > last_rsi_12:
+        rsi_signal = True
+    table.add_column("Rsi Indicator", [str(rsi_signal)])
 
     last_macd_signal_line = macd_signal_line[-1]
     try:
@@ -138,17 +157,48 @@ while True:
         indicator_handler.update_indicator(session, change_2days_ago_indicator.id, last_change_2days_ago)
     except:
         change_2days_ago_indicator = indicator_handler.create_indicator(session, 'change_2days_ago', last_change_2days_ago)
+    print "[+][+] Status do mercado no momento [+][+]"
+    print "\n"
+    t = PrettyTable()
+    t.add_column("Close", [last_close_price])
+    t.add_column("Change 2 dias", [last_change_2days_ago])
+    print t
+    print "\n"
+    print "[+] Indicadores Ativos [+]"
+    print "\n"
 
-    print '[+] Ultimo Close', str(last_close_price)
     print '[+] Ultimo Teto Bollinger Band', str(last_bollinger_up)
     print '[+] Ultimo Chao Bollinger Band', last_bollinger_low
+    print "[+] Ultimo Desvio Padrao Bollinger Bands", str(boll[-1])
     print '[+] Ultimo RSI 6 dias', str(last_rsi_6)
     print '[+] Ultimo RSI 12 dias', str(last_rsi_12)
 #    print '[+] Ultimo Macd', str(last_macd)
     print '[+] Ultimo Macd Signal line', str(last_macd_signal_line)
     print '[+] Ultimo Macd Histogram', str(last_macd_histogram)
+    print "[+] Ultimo SMA 20 dias", str(close_20_sma[-1])
+    print "[+] Ultimo MSTD 20 dias", str(close_20_mstd[-1])
+    print "[+] Ultimo EMA 12 dias", str(close_12_ema[-1])
+    print "[+] Ultimo EMA 26 dias", str(close_26_ema[-1])
+    print "\n"
+    print "\n"
+    print "********************************************************************"
+    print "\n"
+    print "\n"
+    print "[+] Sinais Ativos [+]"
+    print "\n"
+    print table
+    if rsi_signal:
+        print "[+] Sinal RSI 6D > 12D Ativo"
+        print "[++] Distancia dos desvios padroes de %0.3f" % (last_rsi_6 - last_rsi_12)
 
-    print '[+] Ultima Porcentagem de mudanca 2 dias atras  %0.3f' % last_change_2days_ago
+    if bollinger_low_signal:
+        print "[+] Sinal Bollinger Band Lower Band"
+        print "[++] Distancia de %0.3f ate a borda inferior" % (last_bollinger_low - last_close_price)
+    if bollinger_up_signal:
+        print "[+] Sinal Bollinger Band Upper Band"
+        print "[++] Distancia de %0.3f ate a borda superior" % (last_close_price - last_bollinger_up)
+
+    print ""
     #print data['macdh']
     #print data['boll_ub']
     #print data
