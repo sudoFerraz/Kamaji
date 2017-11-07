@@ -16,6 +16,9 @@ import matplotlib.pyplot as plt
 from pyfiglet import Figlet
 from prettytable import PrettyTable
 table = PrettyTable()
+import pandas.DataFrame as dataf
+
+
 
 f = Figlet(font='epic')
 print f.renderText('Kamaji')
@@ -86,9 +89,11 @@ while True:
     rsi_signal = False
     macd_signal_line_signl = False
     macd_histogram_signal = False
+    indcadores_dataframe = []
 
 
     last_bollinger_up = up_bollinger[-1]
+    indicadores_dataframe.append(last_bollinger_up)
     try:
         bollinger_up_indicator
         indicator_handler.update_indicator(session, bollinger_up_indicator.id, last_bollinger_up)
@@ -99,7 +104,10 @@ while True:
     table.add_column("Bollinger up indicator", [str(bollinger_up_signal)])
 
 
+    indicadores_dataframe.append(boll[-1])
+
     last_bollinger_low = low_bollinger[-1]
+    indicadores_dataframe.append(last_bollinger_low)
     try:
         bollinger_low_indicator
         indicator_handler.update_indicator(session, bollinger_low_indicator.id, last_bollinger_low)
@@ -110,6 +118,7 @@ while True:
     table.add_column("Bollinger low indicator", [str(bollinger_low_signal)])
 
     last_close_price = close_price[-1]
+    indicadores_dataframe.append(last_close_price)
     try:
         close_price_indicator
         indicator_handler.update_indicator(session, close_price_indicator.id, last_close_price)
@@ -117,6 +126,7 @@ while True:
         close_price_indicator = indicator_handler.create_indicator(session, 'close_price', last_close_price)
 
     last_rsi_6 = rsi_price_6[-1]
+    indicadores_dataframe.append(last_rsi_6)
     try:
         rsi6_indicator
         indicator_handler.update_indicator(session, rsi6_indicator.id, last_rsi_6)
@@ -126,6 +136,7 @@ while True:
 
 
     last_rsi_12 = rsi_price_12[-1]
+    indicadores_dataframe.append(last_rsi_12)
     try:
         rsi_12_indicator
         indicator_handler.update_indicator(session, rsi_12_indicator.id, last_rsi_12)
@@ -136,6 +147,7 @@ while True:
     table.add_column("Rsi Indicator", [str(rsi_signal)])
 
     last_macd_signal_line = macd_signal_line[-1]
+    indicadores_dataframe.append(last_macd_signal_line)
     try:
         macd_signal_line_indicator
         indicator_handler.update_indicator(session, macd_signal_line_indicator.id, last_macd_signal_line)
@@ -143,6 +155,7 @@ while True:
         macd_signal_line_indicator = indicator_handler.create_indicator(session, 'macd_signal_line', last_macd_signal_line)
 
     last_macd_histogram = macd_histogram[-1]
+    indicadores_dataframe.append(last_macd_histogram)
     try:
         macd_histogram_indicator
         indicator_handler.update_indicator(session, macd_histogram_indicator.id, last_macd_histogram)
@@ -152,11 +165,14 @@ while True:
 
 
     last_change_2days_ago = change_2days_ago[-1]
+    indicadores_dataframe.append(last_change_2days_ago)
     try:
         change_2days_ago_indicator
         indicator_handler.update_indicator(session, change_2days_ago_indicator.id, last_change_2days_ago)
     except:
         change_2days_ago_indicator = indicator_handler.create_indicator(session, 'change_2days_ago', last_change_2days_ago)
+
+
     print "[+][+] Status do mercado no momento [+][+]"
     print "\n"
     t = PrettyTable()
@@ -222,4 +238,4 @@ while True:
     #print low_bollinger
     plt.savefig('testingstockdata.png')
         #print a
-    time.sleep(60)
+    time.sleep(600)
