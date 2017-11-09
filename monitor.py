@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from pyfiglet import Figlet
 from prettytable import PrettyTable
 table = PrettyTable()
-import pandas.DataFrame as dataf
+df = pd.DataFrame()
 
 
 
@@ -87,9 +87,36 @@ while True:
     bollinger_up_signal = False
     bollinger_low_signal = False
     rsi_signal = False
-    macd_signal_line_signl = False
+    macd_signal_line_signal = False
     macd_histogram_signal = False
-    indcadores_dataframe = []
+    indicadores_dataframe = []
+
+
+    last_macd = macd[-1]
+    indicadores_dataframe.append(last_macd)
+    try:
+        macd_indicator
+        indicator_handler.update_indicator(session, macd_indicator.id)
+    except:
+        macd_indicator = indicator_handler.create_indicator(session, 'macd', last_macd)
+
+    last_macd_signal_line = macd_signal_line[-1]
+    indicadores_dataframe.append(last_macd_signal_line)
+    try:
+        macd_signal_line_indicator
+        indicator_handler.update_indicator(session, macd_signal_line_indicator.id, last_macd_signal_line)
+    except:
+        macd_signal_line_indicator = indicator_handler.create_indicator(session, 'macd_signal_line', last_macd_signal_line)
+
+    last_macd_histogram = macd_histogram[-1]
+    indicadores_dataframe.append(last_macd_histogram)
+    try:
+        macd_histogram_indicator
+        indicator_handler.update_indicator(session, macd_histogram_indicator.id, last_macd_histogram)
+    except:
+        macd_histogram_indicator = indicator_handler.create_indicator(session, 'macd_histogram', last_macd_histogram)
+
+
 
 
     last_bollinger_up = up_bollinger[-1]
@@ -146,24 +173,6 @@ while True:
         rsi_signal = True
     table.add_column("Rsi Indicator", [str(rsi_signal)])
 
-    last_macd_signal_line = macd_signal_line[-1]
-    indicadores_dataframe.append(last_macd_signal_line)
-    try:
-        macd_signal_line_indicator
-        indicator_handler.update_indicator(session, macd_signal_line_indicator.id, last_macd_signal_line)
-    except:
-        macd_signal_line_indicator = indicator_handler.create_indicator(session, 'macd_signal_line', last_macd_signal_line)
-
-    last_macd_histogram = macd_histogram[-1]
-    indicadores_dataframe.append(last_macd_histogram)
-    try:
-        macd_histogram_indicator
-        indicator_handler.update_indicator(session, macd_histogram_indicator.id, last_macd_histogram)
-    except:
-        macd_histogram_indicator = indicator_handler.create_indicator(session, 'macd_histogram', last_macd_histogram)
-
-
-
     last_change_2days_ago = change_2days_ago[-1]
     indicadores_dataframe.append(last_change_2days_ago)
     try:
@@ -215,27 +224,44 @@ while True:
         print "[++] Distancia de %0.3f ate a borda superior" % (last_close_price - last_bollinger_up)
 
     print ""
-    #print data['macdh']
-    #print data['boll_ub']
-    #print data
-    #print data['boll_lb']
-    #print last_bollinger_up[-1]
+    
+    #Calculando sinais para estrategia
+    #padronizando os dados
+    boll_ub_array = data['boll_ub']
+    boll_ub_std = boll_ub_array.std()
+    boll_ub_mean = boll_ub_array.mean()
+    boll_ub_difference = last_bollinger_up - boll_ub_mean
+    boll_ub_standardized = boll_ub_difference / boll_ub_std
+
+    boll_lb_array = data['boll_lb']
+    boll_lb_std = boll_lb_array.std()
+    boll_array = data['boll']
+    boll_std = boll_array.std()
+    macd_array = data['macd']
+    macd_std = macd_array.std()
+
+    macd_histogram_array = data['macdh']
+    macd_histogram_std = macd_histogram_array.std()
+    macd_histogram_mean = macd_histogram_array.mean()
+    macd_histogram_difference = last_macd_histogram - macd_histogram_mean
+    macd_histogram_standardized = macd_histogram_difference / macd_histogram_std
+    
+    macd_signal_line_array = data['macds']
+    macd_signal_line_std = macd_signal_line_array.std()
+    macd_signal_line_mean = macd_signal_line.mean()
+    macd_signal_line_std = macd_signal_line.std()
+    
+
+
+
+
     #trace = go.Candlestick(x=data.index, open=data.open, high=data.high, low=data.low, close=data.close)
     #trace = go.Candlestick(x=data.index, close=data.macdh)
     #data = [trace]
     #py.offline.plot(data, filename='Updated_historical')
-    #c = CurrencyRates()
-    #a =  c.get_rate('USD', 'BRL')
-    #x = np.arange(4)
-    #plt.plot(up_bollinger)
-    #plt.plot(low_bollinger)
-    #plt.plot(close_price)
-   # plt.plot(close_price)
     plt.plot(macd)
     plt.plot(macd_signal_line)
     plt.plot(macd_histogram)
-    #print up_bollinger
-    #print low_bollinger
     plt.savefig('testingstockdata.png')
         #print a
     time.sleep(600)
