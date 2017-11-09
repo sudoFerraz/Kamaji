@@ -276,6 +276,7 @@ class graph_storage(object):
 class indicator_handler(object):
     def create_indicator(self, session, indicator_name, indicator_value):
         new_indicator = model.Indicator(name=indicator_name, value=indicator_value)
+        session.rollback()
         session.add(new_indicator)
         session.commit()
         session.flush()

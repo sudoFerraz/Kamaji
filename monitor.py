@@ -233,6 +233,24 @@ while True:
 
 #Calculando sinais para estrategia
     #padronizando e guardando os dados
+    new_rsi6_array = data['rsi_6']
+    new_rsi6_mean = new_rsi6_array.mean()
+    new_rsi6_std = new_rsi6_array.std()
+    new_rsi6_difference = last_rsi_6 - new_rsi6_mean
+    new_rsi6_standardized = new_rsi6_difference / new_rsi6_std
+    if rsi6_mean:
+        indicator_handler.update_indicator(session, rsi6_mean.id, new_rsi6_mean)
+        indicator_handler.update_indicator(session, rsi6_std.id, new_rsi6_std)
+        indicator_handler.update_indicator(session, rsi6_standardized.id, new_rsi6_standardized)
+    elif not rsi6_mean:
+        indicator_handler.create_indicator(session, 'rsi6_mean', new_rsi6_mean)
+        indicator_handler.create_indicator(session, 'rsi6_std', new_rsi6_std)
+        indicator_handler.create_indicator(session, 'rsi6_standardized', new_rsi6_standardized)
+
+
+    new_rsi12_array = data['rsi_12']
+
+
     boll_ub_array = data['boll_ub']
     boll_ub_std = boll_ub_array.std()
     boll_ub_mean = boll_ub_array.mean()
@@ -280,7 +298,7 @@ while True:
 
     new_macd_array = data['macd']
     new_macd_std = new_macd_array.std()
-    new_macd_mean = new_macd_array.mean()d
+    new_macd_mean = new_macd_array.mean()
     new_macd_difference = last_macd - new_macd_mean
     new_macd_standardized = new_macd_difference / new_macd_std
     if macd_mean:
@@ -296,11 +314,11 @@ while True:
     new_macd_histogram_std = new_macd_histogram_array.std()
     new_macd_histogram_mean = new_macd_histogram_array.mean()
     new_macd_histogram_difference = last_macd_histogram - new_macd_histogram_mean
-    new_macd_histogram_standardized = new_macd_histogram_difference / macd_histogram_std
+    new_macd_histogram_standardized = new_macd_histogram_difference / new_macd_histogram_std
     if macd_histogram_mean:
         indicator_handler.update_indicator(session, macd_histogram_mean.id, new_macd_histogram_mean)
         indicator_handler.update_indicator(session, macd_histogram_std.id, new_macd_histogram_std)
-        indicator_handler.update_indicator(session, macd_histogram_standardized, new_macd_standardized)
+        indicator_handler.update_indicator(session, macd_histogram_standardized.id, new_macd_standardized)
     elif not macd_histogram_mean:
         indicator_handler.create_indicator(session, 'macd_histogram_mean', new_macd_histogram_mean)
         indicator_handler.create_indicator(session, 'macd_histogram_std', new_macd_histogram_std)
@@ -308,7 +326,7 @@ while True:
     
     new_macd_signal_line_array = data['macds']
     new_macd_signal_line_std = new_macd_signal_line_array.std()
-    new_macd_signal_line_mean = new_macd_signal_line.mean()
+    new_macd_signal_line_mean = new_macd_signal_line_array.mean()
     new_macd_signal_line_difference = last_macd_signal_line - new_macd_signal_line_mean
     new_macd_signal_line_standardized = new_macd_signal_line_difference / new_macd_signal_line_std
     if macd_signal_line_mean:
@@ -318,7 +336,7 @@ while True:
     elif not macd_signal_line_mean:
         indicator_handler.create_indicator(session, 'macd_signal_line_mean', new_macd_signal_line_mean)
         indicator_handler.create_indicator(session, 'macd_signal_line_std', new_macd_signal_line_std)
-        indicator_handler.create_indicator(sesison, 'macd_signal_line_standardized', new_macd_signal_line_standardized)
+        indicator_handler.create_indicator(session, 'macd_signal_line_standardized', new_macd_signal_line_standardized)
 
 
     print "[+][+] Status do mercado no momento [+][+]"
