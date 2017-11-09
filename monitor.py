@@ -249,6 +249,18 @@ while True:
 
 
     new_rsi12_array = data['rsi_12']
+    new_rsi12_mean = new_rsi12_array.mean()
+    new_rsi12_std = new_rsi12_array.std()
+    new_rsi12_difference = last_rsi_12 - new_rsi12_mean
+    new_rsi12_standardized = new_rsi12_difference / new_rsi12_std
+    if rsi12_mean:
+        indicator_handler.update_indicator(session, rsi12_mean.id, new_rsi12_mean)
+        indicator_handler.update_indicator(session, rsi12_std.id, new_rsi12_std)
+        indicator_handler.update_indicator(session, rsi12_standardized.id, new_rsi12_standardized)
+    elif not rsi12_mean:
+        indicator_handler.create_indicator(session, 'rsi12_mean', new_rsi12_mean)
+        indicator_handler.create_indicator(session, 'rsi12_std', new_rsi12_std)
+        indicator_handler.create_indicator(session, 'rsi12_standardized', new_rsi12_standardized)
 
 
     boll_ub_array = data['boll_ub']
