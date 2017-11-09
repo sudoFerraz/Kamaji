@@ -127,96 +127,7 @@ while True:
 
     indicadores_dataframe = []
 
-    
 
-#Calculando sinais para estrategia
-    #padronizando e guardando os dados
-    boll_ub_array = data['boll_ub']
-    boll_ub_std = boll_ub_array.std()
-    boll_ub_mean = boll_ub_array.mean()
-    boll_ub_difference = last_bollinger_up - boll_ub_mean
-    boll_ub_standardized = boll_ub_difference / boll_ub_std
-    if bollinger_up_mean:
-        indicator_handler.update_indicator(session, bollinger_up_mean.id, boll_ub_mean)
-        indicator_handler.update_indicator(session, bollinger_up_std.id, boll_ub_std)
-        indicator_handler.update_indicator(session, bolilnger_up_standardized.id, boll_up_standardized)
-    elif not bollinger_up_mean:
-        indicator_handler.create_indicator(session, 'bollinger_up_mean', boll_ub_mean)
-        indicator_handler.create_indicator(session, 'bollinger_up_std', boll_ub_std)
-        indicator_handler.create_indicator(session, 'bollinger_up_standardized', boll_ub_standardized)
-        
-    
-
-    boll_lb_array = data['boll_lb']
-    boll_lb_std = boll_lb_array.std()
-    boll_lb_mean = moll_lb_array.mean()
-    boll_lb_difference = last_boll_lb - boll_lb_mean
-    boll_lb_standardized = boll_lb_difference / boll_lb_std
-    if bollinger_low_mean:
-        indicator_handler.update_indicator(session, bollinger_low_mean.id, boll_lb_mean)
-        indicator_handler.update_indicator(session, bollinger_low_std.id, boll_lb_std)
-        indicator_handler.update_indicator(session, bollinger_low_standardized.id, boll_lb_standardized)
-    elif not bollinger_low_mean:
-        indicator_handler.create_indicator(session, 'bollinger_low_mean', boll_lb_mean)
-        indicator_handler.create_indicator(session, 'bollinger_low_std', boll_lb_std)
-        indicator_handler.create_indicator(session, 'bollinger_low_standardized', boll_lb_standardized)
-
-    boll_array = data['boll']
-    boll_std = boll_array.std()
-    boll_mean = boll_array.mean()
-    boll_difference = last_boll - boll_mean
-    boll_standardized = boll_difference / boll_std
-    if bollinger_mean:
-        indicator_handler.update_indicator(session, bollinger_mean.id, boll_mean)
-        indicator_handler.update_indicator(session, bollinger_std.id, boll_std)
-        indicator_handler.update_indicator(session, bollinger_standardized.id, boll_standadized)
-    elif not bollinger_mean:
-        indicator_handler.create_indicator(session, 'bollinger_mean', boll_mean)
-        indicator_handler.create_indicator(session, 'bollinger_std', boll_std)
-        indicator_handler.create_indicator(session, 'bollinger_standardized', boll_standardized)
-
-
-    new_macd_array = data['macd']
-    new_macd_std = macd_array.std()
-    new_macd_mean = macd_array.mean()
-    new_macd_difference = last_macd - macd_mean
-    new_macd_standardized = macd_difference / macd_std
-    if macd_mean:
-        indicator_handler.update_indicator(session, macd_mean.id, new_macd_mean)
-        indicator_handler.update_indicator(session, macd_std.id, new_macd_std)
-        indicator_handler.update_indicator(session, macd_standardized.id, new_macd_standardized)
-    elif not macd_mean:
-        indicator_handler.create_indicator(session, 'macd_mean', new_macd_mean)
-        indicator_handler.create_indicator(session, 'macd_std', new_macd_std)
-        indicator_handler.create_indicator(session, 'macd_standardized', new_macd_standardized)
-
-    new_macd_histogram_array = data['macdh']
-    new_macd_histogram_std = macd_histogram_array.std()
-    new_macd_histogram_mean = macd_histogram_array.mean()
-    new_macd_histogram_difference = last_macd_histogram - macd_histogram_mean
-    new_macd_histogram_standardized = macd_histogram_difference / macd_histogram_std
-    if macd_histogram_mean:
-        indicator_handler.update_indicator(session, macd_histogram_mean.id, new_macd_histogram_mean)
-        indicator_handler.update_indicator(session, macd_histogram_std.id, new_macd_histogram_std)
-        indicator_handler.update_indicator(session, macd_histogram_standardized, new_macd_standardized)
-    elif not macd_histogram_mean:
-        indicator_handler.update_indicator(session, 'macd_histogram_mean', new_macd_histogram_mean)
-        indicator_handler.update_indicator(session, 'macd_histogram_std', new_macd_histogram_std)
-        indicator_handler.update_indicator(session, 'macd_histogram_standardized', new_macd_histogram_standardized)
-    
-    new_macd_signal_line_array = data['macds']
-    new_macd_signal_line_std = macd_signal_line_array.std()
-    new_macd_signal_line_mean = macd_signal_line.mean()
-    new_macd_signal_line_difference = last_macd_signal_line - macd_signal_line_mean
-    new_macd_signal_line_standardized = macd_signal_line_difference / macd_signal_line_std
-    if macd_signal_line_mean:
-        indicator_handler.update_indicator(session, macd_signal_line_mean.id, new_macd_signal_line_mean)
-        indicator_handler.update_indicator(session, macd_signal_line_std.id, new_macd_signal_line_std)
-        indicator_handler.update_indicator(session, macd_signal_line_standardized.id, new_macd_signal_line_standardized)
-    elif not macd_signal_line_mean:
-        indicator_handler.create_indicator(session, 'macd_signal_line_mean', new_macd_signal_line_mean)
-        indicator_handler.create_indicator(session, 'macd_signal_line_std', new_macd_signal_line_std)
-        indicator_handler.create_indicator(sesison, 'macd_signal_line_standardized', new_macd_signal_line_standardized)
 
 #Inserindo e atualizando o banco de dados com os dados mais novos
     #Macd Signal
@@ -228,7 +139,6 @@ while True:
         indicator_handler.update_indicator(session, macd_mean.id, macd_mean)
         indicator_handler.update_indicator(session, macd_std.id)
     except:
-
         macd_indicator = indicator_handler.create_indicator(session, 'macd', last_macd)
 
     last_macd_signal_line = macd_signal_line[-1]
@@ -317,6 +227,98 @@ while True:
         indicator_handler.update_indicator(session, change_2days_ago_indicator.id, last_change_2days_ago)
     except:
         change_2days_ago_indicator = indicator_handler.create_indicator(session, 'change_2days_ago', last_change_2days_ago)
+
+
+
+
+#Calculando sinais para estrategia
+    #padronizando e guardando os dados
+    boll_ub_array = data['boll_ub']
+    boll_ub_std = boll_ub_array.std()
+    boll_ub_mean = boll_ub_array.mean()
+    boll_ub_difference = last_bollinger_up - boll_ub_mean
+    boll_ub_standardized = boll_ub_difference / boll_ub_std
+    if bollinger_up_mean:
+        indicator_handler.update_indicator(session, bollinger_up_mean.id, boll_ub_mean)
+        indicator_handler.update_indicator(session, bollinger_up_std.id, boll_ub_std)
+        indicator_handler.update_indicator(session, bollinger_up_standardized.id, boll_ub_standardized)
+    elif not bollinger_up_mean:
+        indicator_handler.create_indicator(session, 'bollinger_up_mean', boll_ub_mean)
+        indicator_handler.create_indicator(session, 'bollinger_up_std', boll_ub_std)
+        indicator_handler.create_indicator(session, 'bollinger_up_standardized', boll_ub_standardized)
+        
+    
+
+    boll_lb_array = data['boll_lb']
+    boll_lb_std = boll_lb_array.std()
+    boll_lb_mean = boll_lb_array.mean()
+    boll_lb_difference = last_bollinger_low - boll_lb_mean
+    boll_lb_standardized = boll_lb_difference / boll_lb_std
+    if bollinger_low_mean:
+        indicator_handler.update_indicator(session, bollinger_low_mean.id, boll_lb_mean)
+        indicator_handler.update_indicator(session, bollinger_low_std.id, boll_lb_std)
+        indicator_handler.update_indicator(session, bollinger_low_standardized.id, boll_lb_standardized)
+    elif not bollinger_low_mean:
+        indicator_handler.create_indicator(session, 'bollinger_low_mean', boll_lb_mean)
+        indicator_handler.create_indicator(session, 'bollinger_low_std', boll_lb_std)
+        indicator_handler.create_indicator(session, 'bollinger_low_standardized', boll_lb_standardized)
+
+    boll_array = data['boll']
+    boll_std = boll_array.std()
+    boll_mean = boll_array.mean()
+    boll_difference = last_bollinger - boll_mean
+    boll_standardized = boll_difference / boll_std
+    if bollinger_mean:
+        indicator_handler.update_indicator(session, bollinger_mean.id, boll_mean)
+        indicator_handler.update_indicator(session, bollinger_std.id, boll_std)
+        indicator_handler.update_indicator(session, bollinger_standardized.id, boll_standardized)
+    elif not bollinger_mean:
+        indicator_handler.create_indicator(session, 'bollinger_mean', boll_mean)
+        indicator_handler.create_indicator(session, 'bollinger_std', boll_std)
+        indicator_handler.create_indicator(session, 'bollinger_standardized', boll_standardized)
+
+
+    new_macd_array = data['macd']
+    new_macd_std = new_macd_array.std()
+    new_macd_mean = new_macd_array.mean()d
+    new_macd_difference = last_macd - new_macd_mean
+    new_macd_standardized = new_macd_difference / new_macd_std
+    if macd_mean:
+        indicator_handler.update_indicator(session, macd_mean.id, new_macd_mean)
+        indicator_handler.update_indicator(session, macd_std.id, new_macd_std)
+        indicator_handler.update_indicator(session, macd_standardized.id, new_macd_standardized)
+    elif not macd_mean:
+        indicator_handler.create_indicator(session, 'macd_mean', new_macd_mean)
+        indicator_handler.create_indicator(session, 'macd_std', new_macd_std)
+        indicator_handler.create_indicator(session, 'macd_standardized', new_macd_standardized)
+
+    new_macd_histogram_array = data['macdh']
+    new_macd_histogram_std = new_macd_histogram_array.std()
+    new_macd_histogram_mean = new_macd_histogram_array.mean()
+    new_macd_histogram_difference = last_macd_histogram - new_macd_histogram_mean
+    new_macd_histogram_standardized = new_macd_histogram_difference / macd_histogram_std
+    if macd_histogram_mean:
+        indicator_handler.update_indicator(session, macd_histogram_mean.id, new_macd_histogram_mean)
+        indicator_handler.update_indicator(session, macd_histogram_std.id, new_macd_histogram_std)
+        indicator_handler.update_indicator(session, macd_histogram_standardized, new_macd_standardized)
+    elif not macd_histogram_mean:
+        indicator_handler.create_indicator(session, 'macd_histogram_mean', new_macd_histogram_mean)
+        indicator_handler.create_indicator(session, 'macd_histogram_std', new_macd_histogram_std)
+        indicator_handler.create_indicator(session, 'macd_histogram_standardized', new_macd_histogram_standardized)
+    
+    new_macd_signal_line_array = data['macds']
+    new_macd_signal_line_std = new_macd_signal_line_array.std()
+    new_macd_signal_line_mean = new_macd_signal_line.mean()
+    new_macd_signal_line_difference = last_macd_signal_line - new_macd_signal_line_mean
+    new_macd_signal_line_standardized = new_macd_signal_line_difference / new_macd_signal_line_std
+    if macd_signal_line_mean:
+        indicator_handler.update_indicator(session, macd_signal_line_mean.id, new_macd_signal_line_mean)
+        indicator_handler.update_indicator(session, macd_signal_line_std.id, new_macd_signal_line_std)
+        indicator_handler.update_indicator(session, macd_signal_line_standardized.id, new_macd_signal_line_standardized)
+    elif not macd_signal_line_mean:
+        indicator_handler.create_indicator(session, 'macd_signal_line_mean', new_macd_signal_line_mean)
+        indicator_handler.create_indicator(session, 'macd_signal_line_std', new_macd_signal_line_std)
+        indicator_handler.create_indicator(sesison, 'macd_signal_line_standardized', new_macd_signal_line_standardized)
 
 
     print "[+][+] Status do mercado no momento [+][+]"
