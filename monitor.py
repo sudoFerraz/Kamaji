@@ -134,7 +134,7 @@ while True:
     last_macd = macd[-1]
     indicadores_dataframe.append(last_macd)
     try:
-        macd_mean
+        macd_indicator
         indicator_handler.update_indicator(session, macd_indicator.id, last_macd)
         indicator_handler.update_indicator(session, macd_mean.id, macd_mean)
         indicator_handler.update_indicator(session, macd_std.id)
