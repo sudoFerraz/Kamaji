@@ -1,0 +1,66 @@
+'' = Variável, utilização em produção sem aspas
+Indicadores atuais : MACD, MACD_HISTOGRAM, BOLLINGER_BANDS, RSI
+Preço atual : close_price
+
+Indicadores no banco : 
+#"macd"
+"macd_signal_line"
+#"macd_histogram"
+"bollinger"
+#"bollinger_up"
+#"bollinger_low"
+"close_price"
+#"rsi6"
+#"rsi12"
+"change_2days_ago"
+"rsi6_mean"
+"rsi6_std"
+"rsi6_standardized"
+"rsi12_mean"
+"rsi12_std"
+"rsi12_standardized"
+"bollinger_up_mean"
+"bollinger_up_std"
+"bollinger_up_standardized"
+"bollinger_low_mean"
+"bollinger_low_std"
+"bollinger_low_standardized"
+"bollinger_mean"
+"bollinger_std"
+"bollinger_standardized"
+"macd_mean"
+"macd_std"
+"macd_standardized"
+"macd_histogram_mean"
+"macd_histogram_std"
+"macd_histogram_standardized"
+"macd_signal_line_mean"
+"macd_signal_line_std"
+"macd_signal_line_standardized"
+
+    
+    Get completo de um indicador:
+        localhost/indicator/get/'nome_indicador'
+        retorna : [ID, Valor atual, Média, Desvio Padrão, Padronizado]
+    
+    Get especifico de um indicador:
+        localhost/indicator/getspecific/'nome_indicador'
+        retorna : [ID, Valor atual]
+
+    Pegar todos os valores de uma dada opção(Ex: Pegar todos os preços para gráfico):
+        localhost/getall/'nomeopção'
+        retorna : [[2010 08 19, 3.14], [2010 08 20, 3.15], ...]
+
+    Get invoice com todos os dados:
+        localhost/invoice/get/'numero_invoice'
+        retorna : "A VER OS CAMPOS DA INVOICE"
+
+    Get todas invoices:
+        localhost/invoice/getall
+        retorna : [["A VER OS CAMPOS DA INVOICE"],[],[], ...]
+
+    Get todas notificações:
+        localhost/notification/getall
+        retorna : [[ID, celulares/emails, date], [], ...]
+
+
