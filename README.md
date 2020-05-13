@@ -1,5 +1,9 @@
+# Kamaji
 
-# Dataset modeling for Financial Time Series Data
+### This is a full fledged application that serves the model data on a flask backend, it currently uses the techniques described here to prep the data and feed it into a tensorflow model, which in written as csv and served throught a REST api
+
+
+## Dataset modeling for Financial Time Series Data
 This document aims to provide information on the research related to find the best format to represent financial time series data with certain data analysis for the usage of machine learning techniques
 
 ## On the data provided - Overview
